@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatternLayout.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Anesu-Matanga-Ass2-Log</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">PatternLayout.java</span></div><h1>PatternLayout.java</h1><pre class="source lang-java linenums">import org.apache.log4j.Layout;
+import org.apache.log4j.spi.LoggingEvent;
+
+import java.util.Formatter;
+
+public class PatternLayout extends Layout {
+<span class="fc" id="L7">    static String DEFAULT_CONVERSION_PATTERN = &quot;%p [%t]: %m%n&quot;;</span>
+    private static String category;
+    private static String date;
+    private static String message;
+    private static String priority;
+    private static String thread;
+    private static String lineSeparator;
+    private LoggingEvent loggingEvent;
+
+    private static PatternLayout patternLayout;
+
+    //CONSTRUCTORS
+<span class="fc" id="L19">    public PatternLayout(){</span>
+<span class="fc" id="L20">    }</span>
+
+<span class="nc" id="L22">    public PatternLayout(String pattern){</span>
+
+<span class="nc" id="L24">    }</span>
+
+
+    @Override
+    public void activateOptions() {
+
+<span class="nc" id="L30">    }</span>
+
+    @Override
+    public String format(LoggingEvent loggingEvent) {
+       /* return  loggingEvent.getLevel() + &quot; [&quot; +
+                loggingEvent.getThreadName() + &quot;] &quot; + loggingEvent.getMessage() + &quot;\n&quot;;*/
+<span class="nc" id="L36">        return formatPattern(DEFAULT_CONVERSION_PATTERN, loggingEvent);</span>
+    }
+
+    public String formatPattern(String pattern, LoggingEvent loggingEvent){
+<span class="nc" id="L40">        String patternStr = pattern;</span>
+<span class="nc" id="L41">        String formattedStr = &quot;&quot;;</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        for (int i = 0; i &lt; patternStr.length(); i++){</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">            if(patternStr.charAt(i) == 'c'){</span>
+<span class="nc" id="L44">                category = loggingEvent.getLoggerName();</span>
+<span class="nc" id="L45">                formattedStr += category;</span>
+            }
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            if(patternStr.charAt(i) == 'm'){</span>
+<span class="nc" id="L48">                message = loggingEvent.getMessage().toString();</span>
+<span class="nc" id="L49">                formattedStr += message;</span>
+            }
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            if(patternStr.charAt(i) == 'p'){</span>
+<span class="nc" id="L52">                priority = loggingEvent.getLevel().toString();</span>
+<span class="nc" id="L53">                formattedStr += priority;</span>
+            }
+<span class="nc bnc" id="L55" title="All 2 branches missed.">            if(patternStr.charAt(i) == 't'){</span>
+<span class="nc" id="L56">                thread = loggingEvent.getThreadName();</span>
+<span class="nc" id="L57">                formattedStr += thread;</span>
+            }
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            if(patternStr.charAt(i) == 'n'){</span>
+<span class="nc" id="L60">                lineSeparator = &quot;\n&quot;;</span>
+<span class="nc" id="L61">                formattedStr += lineSeparator;</span>
+            }
+<span class="nc bnc" id="L63" title="All 2 branches missed.">            if(patternStr.charAt(i) == 'd'){</span>
+<span class="nc" id="L64">                date = loggingEvent.getLocationInformation().toString();</span>
+<span class="nc" id="L65">                formattedStr += date;</span>
+            }
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            if(patternStr.charAt(i) == ' '){</span>
+<span class="nc" id="L68">                formattedStr += ' ';</span>
+            }
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            if(patternStr.charAt(i) == '['){</span>
+<span class="nc" id="L71">                formattedStr += '[';</span>
+            }
+<span class="nc bnc" id="L73" title="All 2 branches missed.">            if(patternStr.charAt(i) == ']'){</span>
+<span class="nc" id="L74">                formattedStr += ']';</span>
+            }
+<span class="nc bnc" id="L76" title="All 2 branches missed.">            if(patternStr.charAt(i) == ':'){</span>
+<span class="nc" id="L77">                formattedStr += ':';</span>
+            }
+        }
+<span class="nc" id="L80">        return formattedStr;</span>
+    }
+
+    @Override
+    public boolean ignoresThrowable() {
+<span class="nc" id="L85">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

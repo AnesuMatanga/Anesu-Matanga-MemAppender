@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MemoryAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Anesu-Matanga-Ass2-Log</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">MemoryAppender.java</span></div><h1>MemoryAppender.java</h1><pre class="source lang-java linenums">import org.apache.log4j.*;
+import org.apache.log4j.spi.LoggingEvent;
+
+import java.io.Console;
+import java.text.Format;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Formatter;
+import java.util.List;
+import java.util.logging.ConsoleHandler;
+
+
+public class MemoryAppender extends AppenderSkeleton {
+<span class="fc" id="L14">    private static MemoryAppender memoryAppender = null;</span>
+
+<span class="pc" id="L16">    private long discardedLogs = 0;</span>
+<span class="pc" id="L17">    private long discardAfterReset = 0;</span>
+<span class="pc" id="L18">    private int maxSize = 5;</span>
+<span class="pc" id="L19">    private List&lt;LoggingEvent&gt; logEventsList = null;</span>
+<span class="pc" id="L20">    private final List&lt;String&gt; logEventString = new ArrayList&lt;&gt;();</span>
+    private LoggingEvent logEvent;
+    private Console console;
+    private Layout SUPPLIED_LAYOUT;
+<span class="pc" id="L24">    private boolean isNewLayout = false;</span>
+
+
+    //Constructors
+<span class="nc" id="L28">    public MemoryAppender() {</span>
+<span class="nc" id="L29">        logEventsList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L30">    }</span>
+
+<span class="fc" id="L32">    public MemoryAppender(Layout layout) {</span>
+<span class="fc" id="L33">        setLayout(layout);</span>
+<span class="fc" id="L34">        logEventsList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L35">    }</span>
+
+<span class="nc" id="L37">    public MemoryAppender(Layout layout, List&lt;LoggingEvent&gt; logList){</span>
+<span class="nc" id="L38">        logEventsList = logList;</span>
+<span class="nc" id="L39">    }</span>
+
+
+    /**
+     * @param loggingEvent adding to list of logs(memory)
+     */
+    @Override
+    protected void append(LoggingEvent loggingEvent) {
+        VelocityLayout layout;
+<span class="fc" id="L48">        logEvent = loggingEvent;</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (this.closed == false) {</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">            if (logEventsList.size() &gt;= maxSize) {</span>
+                //System.out.println(&quot;Exceeded max size!!&quot;);
+                //System.out.println(&quot;Size: &quot; + getCurrentLogsSize());
+<span class="fc" id="L53">                reset();</span>
+<span class="fc" id="L54">                logEvent.getMessage();</span>
+<span class="fc" id="L55">                logEvent.getLoggerName();</span>
+<span class="fc" id="L56">                logEvent.getLevel();</span>
+<span class="fc" id="L57">                logEventsList.add(logEvent);</span>
+<span class="fc" id="L58">                logEventString.add(String.valueOf(logEvent));</span>
+                //System.out.println(loggingEvent.getMessage());
+            } else {
+<span class="fc" id="L61">                logEvent.getMessage();</span>
+<span class="fc" id="L62">                logEvent.getLoggerName();</span>
+<span class="fc" id="L63">                logEvent.getLevel();</span>
+<span class="fc" id="L64">                logEventsList.add(logEvent);</span>
+<span class="fc" id="L65">                logEventString.add(String.valueOf(logEvent));</span>
+                //System.out.println(loggingEvent.getMessage());
+
+            }
+        } else {
+<span class="nc" id="L70">            System.out.println(&quot;Memory Appender is closed&quot;);</span>
+        }
+<span class="fc" id="L72">    }</span>
+
+    public void setMaxSize(int size){
+<span class="fc" id="L75">        this.maxSize = size;</span>
+<span class="fc" id="L76">    }</span>
+
+    public void setLayout(Layout layout){
+<span class="fc" id="L79">        SUPPLIED_LAYOUT = layout;</span>
+<span class="fc" id="L80">        isNewLayout = true;</span>
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Close the memory appender after use
+     */
+    @Override
+    public void close() {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (this.closed) {</span>
+<span class="nc" id="L89">            return;</span>
+        }
+<span class="nc" id="L91">        this.closed = true;</span>
+<span class="nc" id="L92">    }</span>
+
+    /**
+     * @return boolean of requiresLayout?
+     */
+    @Override
+    public boolean requiresLayout() {
+<span class="nc" id="L99">        return false;</span>
+    }
+
+    public String getPATTERNLayout() {
+<span class="nc" id="L103">        return PatternLayout.DEFAULT_CONVERSION_PATTERN;</span>
+    }
+
+
+    public List&lt;String&gt; getEventStrings() {
+<span class="fc" id="L108">        return Collections.unmodifiableList(logEventString);</span>
+    }
+
+    //Return VelocityLayoutFormatted message
+    public String getVelocityLayoutFormat(Level level){
+<span class="fc" id="L113">        VelocityLayout velocityLayout = new VelocityLayout();</span>
+        String getBack;
+<span class="fc" id="L115">        int position = 0;</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        for (int i = 0; i &lt; getCurrentLogs().size(); i++) {</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">            if(getCurrentLogs().get(i).getLevel().toString() == &quot;level&quot;){</span>
+<span class="nc" id="L118">                position = i;</span>
+            }
+        }
+<span class="fc" id="L121">        getBack = velocityLayout.format(getCurrentLogs().get(position));</span>
+<span class="fc" id="L122">        return getBack;</span>
+    }
+
+
+    @Override
+    public String toString() {
+<span class="nc" id="L128">        return logEvent.getLevel() + logEvent.getLoggerName() + logEvent.getMessage();</span>
+
+    }
+
+    public void printLogs() {
+<span class="nc" id="L133">        PatternLayout patternLayout = new PatternLayout();</span>
+        //System.out.println(&quot;In printLogs&quot;);
+<span class="nc" id="L135">        int size = getCurrentLogs().size();</span>
+<span class="nc" id="L136">        String printLogs = &quot;&quot;;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (isNewLayout == true) {</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">            for (int i = 0; i &lt; size; i++) {</span>
+<span class="nc" id="L139">                printLogs = SUPPLIED_LAYOUT.format(getCurrentLogs().get(i));</span>
+<span class="nc" id="L140">                System.out.print(printLogs);</span>
+            }
+        } else {
+<span class="nc bnc" id="L143" title="All 2 branches missed.">            for (int i = 0; i &lt; size; i++) {</span>
+<span class="nc" id="L144">                printLogs = patternLayout.format(getCurrentLogs().get(i));</span>
+<span class="nc" id="L145">                System.out.print(printLogs);</span>
+            }
+
+        }
+<span class="nc" id="L149">    }</span>
+
+    //resetCachedDiscardLogs is to reset and discardedLogs number
+    public void resetDiscardedLogs(){
+<span class="nc" id="L153">        discardedLogs = 0;</span>
+<span class="nc" id="L154">    }</span>
+
+
+    /**
+     * @return List&lt;LoggingEvent&gt; list of logs unmodifiable
+     */
+    public List&lt;LoggingEvent&gt; getCurrentLogs() {
+<span class="fc" id="L161">        return Collections.unmodifiableList(logEventsList);</span>
+    }
+
+    /**
+     * Clear the List and count discarded logs when maxSize reached
+     */
+    public void reset() {
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (logEventsList.size() &gt;= maxSize) {</span>
+<span class="fc" id="L169">            discardedLogs += maxSize;</span>
+<span class="fc" id="L170">            logEventsList.clear();</span>
+<span class="fc" id="L171">            logEventString.clear();</span>
+        }
+<span class="fc" id="L173">    }</span>
+
+    //For tests
+    public int getCurrentLogsSize(){
+<span class="nc" id="L177">        return  getCurrentLogs().size();</span>
+    }
+
+    /**
+     * Get number of discarded logs from list
+     */
+    public long getDiscardedLogsCount() {
+<span class="fc" id="L184">        return discardedLogs;</span>
+    }
+
+    public boolean contains(String string, Level level) {
+<span class="nc" id="L188">        return this.logEventsList.stream()</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">                .anyMatch(event -&gt; event.toString().contains(string)</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">                        &amp;&amp; event.getLevel().equals(level));</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

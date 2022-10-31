@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VelocityLayout.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Anesu-Matanga-Ass2-Log</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">VelocityLayout.java</span></div><h1>VelocityLayout.java</h1><pre class="source lang-java linenums">import org.apache.log4j.Layout;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
+
+import java.io.StringWriter;
+
+public class VelocityLayout extends Layout {
+    private static String category;
+    private static String date;
+    private static String message;
+    private static String priority;
+    private static String thread;
+    private static String lineSeparator;
+<span class="fc" id="L17">    private static String CONVERSION_PATTERN = &quot;[$t]: $m$n&quot;;</span>
+    private LoggingEvent loggingEvent;
+
+    private static VelocityLayout velocityLayout;
+
+<span class="fc" id="L22">    public VelocityLayout() {</span>
+<span class="fc" id="L23">    }</span>
+
+<span class="fc" id="L25">    public VelocityLayout(String pattern) {</span>
+<span class="fc" id="L26">        setConversionPattern(pattern);</span>
+<span class="fc" id="L27">    }</span>
+
+    @Override
+    public void activateOptions() {
+
+<span class="nc" id="L32">    }</span>
+
+    @Override
+    public String format(LoggingEvent loggingEvent) {
+<span class="fc" id="L36">        String patternStr = CONVERSION_PATTERN;</span>
+<span class="fc" id="L37">        String formattedStr = &quot;&quot;;</span>
+<span class="fc" id="L38">        String newFormatted = &quot;&quot;;</span>
+
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        for (int i = 0; i &lt; patternStr.length(); i++) {</span>
+            /*first, get and initialize an engine */
+<span class="fc" id="L42">            VelocityEngine ve = new VelocityEngine();</span>
+<span class="fc" id="L43">            ve.init();</span>
+            /*get the template*/
+<span class="fc" id="L45">            Template template = ve.getTemplate(</span>
+                    &quot;velocityTemp.vm&quot;);
+            /*Create a context and add data*/
+<span class="fc" id="L48">            VelocityContext context = new VelocityContext();</span>
+<span class="fc" id="L49">            context.put(&quot;pattern&quot;, patternStr.charAt(i));</span>
+<span class="fc" id="L50">            context.put(&quot;strSize&quot;, patternStr.length());</span>
+<span class="fc" id="L51">            context.put(&quot;loggingEvent&quot;, loggingEvent);</span>
+<span class="fc" id="L52">            context.put(&quot;message&quot;, loggingEvent.getMessage().toString());</span>
+<span class="fc" id="L53">            context.put(&quot;thread&quot;, loggingEvent.getThreadName());</span>
+<span class="fc" id="L54">            context.put(&quot;priority&quot;, loggingEvent.getLevel());</span>
+<span class="fc" id="L55">            context.put(&quot;category&quot;, loggingEvent.getLoggerName());</span>
+<span class="fc" id="L56">            context.put(&quot;lineSeparator&quot;, &quot;\n&quot;);</span>
+
+            /*Now rendering template into a StringWriter */
+<span class="fc" id="L59">            StringWriter writer = new StringWriter();</span>
+<span class="fc" id="L60">            template.merge(context, writer);</span>
+<span class="fc" id="L61">            formattedStr += writer.toString();</span>
+            //System.out.print(formattedStr);
+        }
+        //System.out.print(formattedStr);
+<span class="fc" id="L65">        return formattedStr;</span>
+    }
+
+    @Override
+    public boolean ignoresThrowable() {
+<span class="nc" id="L70">        return false;</span>
+    }
+
+    public static void setConversionPattern(String conversionPattern) {
+<span class="fc" id="L74">        CONVERSION_PATTERN = conversionPattern;</span>
+<span class="fc" id="L75">    }</span>
+
+    public String getConversionPattern() {
+<span class="nc" id="L78">        return CONVERSION_PATTERN;</span>
+    }
+
+    public void setCategory(String cat) {
+<span class="nc" id="L82">        category = cat;</span>
+<span class="nc" id="L83">    }</span>
+
+    public void setMessage(String msg) {
+<span class="nc" id="L86">        message = msg;</span>
+<span class="nc" id="L87">    }</span>
+
+    public void setPriority(String pri) {
+<span class="nc" id="L90">        priority = pri;</span>
+<span class="nc" id="L91">    }</span>
+
+    public void setThread(String thre) {
+<span class="nc" id="L94">        thread = thre;</span>
+<span class="nc" id="L95">    }</span>
+
+    public void setLineSeparator(String lineSep) {
+<span class="nc" id="L98">        lineSeparator = lineSep;</span>
+<span class="nc" id="L99">    }</span>
+
+
+    public String getFormatted(String formattedStr,
+                               LoggingEvent loggingEvent,
+                               StringWriter writer) {
+<span class="nc" id="L105">        System.out.println(&quot;in GF&quot;);</span>
+<span class="nc" id="L106">        String variable = writer.toString();</span>
+<span class="nc" id="L107">        System.out.println(&quot;IN : &quot; + variable);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (variable == &quot;m&quot;) {</span>
+<span class="nc" id="L109">            System.out.println(&quot;in m&quot;);</span>
+<span class="nc" id="L110">            formattedStr += loggingEvent.getMessage();</span>
+        }
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (writer.toString() == &quot;c&quot;) {</span>
+<span class="nc" id="L113">            formattedStr += loggingEvent.getLoggerName();</span>
+        }
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (variable == &quot;t&quot;) {</span>
+<span class="nc" id="L116">            formattedStr += loggingEvent.getThreadName();</span>
+        }
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (writer.toString() == &quot;p&quot;) {</span>
+<span class="nc" id="L119">            formattedStr += loggingEvent.getLevel();</span>
+        }
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (writer.toString() == &quot;\n&quot;) {</span>
+<span class="nc" id="L122">            formattedStr += &quot;\n&quot;;</span>
+        }
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (writer.toString() == &quot; &quot;) {</span>
+<span class="nc" id="L125">            formattedStr += &quot; &quot;;</span>
+        }
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (writer.toString() == &quot;]&quot;) {</span>
+<span class="nc" id="L128">            formattedStr += &quot;]&quot;;</span>
+        }
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (writer.toString() == &quot;[&quot;) {</span>
+<span class="nc" id="L131">            formattedStr += &quot;[&quot;;</span>
+        }
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (writer.toString() == &quot;:&quot;) {</span>
+<span class="nc" id="L134">            formattedStr += &quot;:&quot;;</span>
+        }
+<span class="nc" id="L136">        return  formattedStr;</span>
+    }
+
+    public String removeLineBreaks(String str){
+<span class="nc" id="L140">        String newString = str;</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        for (int i = 0; i &lt; newString.length(); i++){</span>
+<span class="nc bnc" id="L142" title="All 4 branches missed.">            if (newString.charAt(i) == '\n' &amp;&amp; i != newString.length() - 1){</span>
+<span class="nc" id="L143">                newString.replace('\n', ' ');</span>
+            }
+        }
+<span class="nc" id="L146">        return newString;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
