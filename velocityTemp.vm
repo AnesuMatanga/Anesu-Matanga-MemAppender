@@ -1,0 +1,61 @@
+#set($formatted = "")
+#if ($pattern == 'm')
+    #set($formatted = $message)
+#else
+    #set($formatted = "")
+#end
+$formatted##
+#if ($pattern == '$')
+    #set($formatted = "")
+#else
+    #set($formatted = "")
+#end
+$formatted##
+#if ($pattern == 't')
+    #set($formatted = $thread)
+#else
+    #set($formatted = "")
+#end
+$formatted##
+#if ($pattern == '[')
+    #set($formatted = "[")
+#else
+    #set($formatted = "")
+#end
+$formatted##
+#if ($pattern == ']')
+    #set($formatted = "]")
+#else
+    #set($formatted = "")
+#end
+$formatted##
+#if ($pattern == ' ')
+    #set($formatted = " ")
+#else
+    #set($formatted = "")
+#end
+$formatted##
+#if ($pattern == 'p')
+    #set($formatted = $priority)
+#else
+    #set($formatted = "")
+#end
+$formatted##
+#if ($pattern == ':')
+    #set($formatted = ":")
+#else
+    #set($formatted = "")
+#end
+$formatted##
+#if ($pattern == 'c')
+    #set($formatted = "$category")
+#else
+    #set($formatted = "")
+#end
+$formatted##
+#if ($pattern == 'n')
+    #set($formatted = $lineSeparator)
+#else
+    #set($formatted = "")
+#end
+$formatted##
